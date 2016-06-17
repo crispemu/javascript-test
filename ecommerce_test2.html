@@ -1,0 +1,140 @@
+<html>
+	<head><title>Ecommerce test</title></head>
+	<body>
+		<link href="../comScore/javascript/wwwroot/ext/3_2_1/resources/css/ext-all.css" rel="stylesheet" type="text/css"/>
+		<script type="text/javascript" src="../comScore/javascript/wwwroot/ext/3_2_1/adapter/ext/ext-base.js"></script>
+		<script type="text/javascript" src="../comScore/javascript/wwwroot/ext/3_2_1/ext-all.js"></script>
+		
+		<div id="gridContainer" />
+		<div id="buttonContainer" />
+		<script type="text/javascript">
+		
+		var lineOrder = Ext.data.Record.create([{
+		        name: 'prod_id',
+		        type: 'string'
+		    }, {
+		        name: 'brand',
+		        type: 'string'
+		    }, {
+		        name: 'product',
+		        type: 'string'
+		    }, {
+			    name: 'shop',
+			    type: 'string'
+			}, {
+				name: 'quantity',
+				type: 'int'
+			}, {
+				name: 'price',
+				type: 'int'
+			}
+		]);
+		
+		var orderReader = new Ext.data.ArrayReader( {
+			idIndex : 0
+			}, ['prod_id','brand','product','shop','quantity','price']
+		); 
+		
+		var store = new Ext.data.Store( {
+			data : [['10001', 'Nike', 'shoes', 'Mall',2500,100],
+					['10002', 'Brooks', 'shoes', 'Center',2200,150],
+					['10003', 'Nike', 'shoes', 'Mall',2500,100],
+					['10004', 'Nike', 'shoes', 'Mall',2500,100],
+					['10005', 'Brooks', 'shoes', 'Mall',2500,100],
+					['10006', 'Nike', 'shoes', 'Mall',2500,100],
+					['10007', 'Puma', 'shoes', 'Mall',2500,100],
+					['10008', 'Puma', 'shoes', 'Mall',2500,100],
+					['10009', 'Brooks', 'shoes', 'Mall',2500,100],
+					['10010', 'Nike', 'shoes', 'Mall',2500,100],
+					['10011', 'Nike', 'shoes', 'Mall',2500,100],
+					['10012', 'Nike', 'shoes', 'Mall',2500,100],
+					['10013', 'CAT', 'shoes', 'Mall',2500,100],
+					['10014', 'Nike', 'shoes', 'Mall',2500,100],
+					['10015', 'Nike', 'shoes', 'Mall',2500,100],
+					['10016', 'CAT', 'shoes', 'Mall',2500,100],
+					['10017', 'CAT', 'shoes', 'Mall',2500,100]],
+			reader : orderReader 
+		});
+		
+		
+		var orderColumnModel = new Ext.grid.ColumnModel(  
+	        [{    
+	            header: 'Product Id',  
+	            dataIndex: 'prod_id',  
+	            width: 90
+	        },{  
+	            header: 'Brand',  
+	            dataIndex: 'brand',  
+	            width: 150
+
+	        },{  
+	            header: 'Product',  
+	            dataIndex: 'product',  
+	            width: 150
+	        },{  
+	            header: 'Shop',  
+	            dataIndex: 'shop',  
+	            width: 90
+	        },{  
+		     	header: 'Quantity',  
+		        dataIndex: 'qty',  
+		        width: 90
+			},{  
+			    header: 'Price',  
+			    dataIndex: 'price',  
+			    width: 90	
+			}]  
+	    );
+
+		
+	    var orderGrid = new Ext.grid.GridPanel({  
+	        id: 'cat_categoriesGrid',  
+	        store: store,  
+	        cm: orderColumnModel,  
+	        enableColLock:false,  
+			width: 800,
+			height: 500,
+			title: 'E-commerce Test',
+			listeners: {
+				cellclick: function(grid, rowIndex, colIndex, e) {
+					var record = grid.store.getAt(rowIndex);
+					for (var i = 0; i < grid.store.getCount(); i++) {
+						if (record.get('brand') == grid.store.getAt(i).get('brand')) {
+							grid.getView().getRow(i).style.display = 'none';
+						}
+					}
+					
+				}
+			}
+	    });
+		
+		orderGrid.on('afteredit', afterEdit, this );
+		function afterEdit(e) {
+			e.record.commit();
+		};	
+		
+		var mainPanel = new Ext.Panel({
+            border: false,
+            //layout: 'border',
+            region:'center',
+            margins: '0 0 0 0',
+            rootVisible: false,
+            lines: false,
+            scrollable: false,
+            html:
+				'<div id="orderGrid"></div>',
+                listeners: {
+                    afterrender: function(panel) {
+                        orderGrid.render('orderGrid');
+
+                    }
+                }
+        });
+			
+		mainPanel.render('gridContainer'); 
+	
+		</script>
+
+		<script language="JavaScript1.2" src="js/ecommerce_test.js"></script>
+	</body>
+</html>
